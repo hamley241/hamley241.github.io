@@ -1,0 +1,32 @@
+<HtmL>
+
+<head>
+</head>
+<body>
+<script type="text/javascript">
+
+var glCanvas = document.createElement("canvas");
+          var glCxt = null;
+          try {
+            glCxt = window.WebGLRenderingContext && (glCanvas.getContext("webgl") || glCanvas.getContext("experimental-webgl") || glCanvas.getContext("experimental-webgl2"))
+          } catch (e) {
+            glCxt = null
+          }
+          if (glCxt) {
+            var visTimeStamp = new Date();
+            var visJsHost = "http://gallery.visarity.com/";
+            var gaJsHost = "http://ajax.googleapis.com/"
+            var visCampaignID = "v3ad-6861-9175-937e-99e24";
+            var visCampaignType = "BILLBOARD";
+            var elbeAdWidth = "1024";
+            var elbeAdHeight = "576";
+            var elbebgColor = "#000";
+            document.write(unescape("%3Cscript src='" + gaJsHost + "ajax/libs/jquery/1.11.1/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+            document.write(unescape("%3Cscript src='" + visJsHost + "js/elbe_brain.js?t=" + visTimeStamp.getTime() + " type='text/javascript'%3E%3C/script%3E"));
+            document.write(unescape('%3Cdiv id="elbe" style="position:relative; background:#000;" width:"' + elbeAdWidth + "px; " + " height:" + elbeAdHeight + "px; " + '%3E%3C/div%3E'));
+          } else {
+            alert("Your browser is old, does not suport WEBGL")
+          }
+</script>
+      </body>
+      </html>
