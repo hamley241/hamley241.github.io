@@ -187,10 +187,25 @@
             </div>
 
             <div class="highlight-box">
-                <h3>3. Automate the Response</h3>
+                <h3>3. Peer Comparison — The Outlier Test</h3>
+                <p>If you have 100 instances doing the same job, they should behave similarly. When one instance starts deviating from its peers — higher latency, more errors, different resource usage — that's a grey failure signal.</p>
+                <p>The instance might pass every health check. But if it's the only one with a 200ms p99 while its siblings sit at 50ms, something's wrong.</p>
+                <p>Compare against the fleet, not against thresholds. Outliers reveal what absolutes miss.</p>
+            </div>
+
+            <div class="highlight-box">
+                <h3>4. Automate the Response</h3>
                 <p>By the time a human notices, users have suffered for 15+ minutes.</p>
                 <p>We reduced detection time from ~40 minutes to under 4 minutes through automation. Not by making engineers faster — by removing engineers from the critical path.</p>
             </div>
+
+            <h2>From Detection to Action</h2>
+
+            <p>Detecting grey failures is only half the battle. The real test comes at 3 AM — can you go from "something's wrong" to "problem solved" without waking up half the engineering team?</p>
+
+            <p>This is where most teams stumble. They build great detection, then rely on humans to respond. But humans are slow. Humans need context. Humans have to follow runbooks. By the time a human acts, users have been suffering for 30+ minutes.</p>
+
+            <p>Let me show you what this looked like for us — and how we fixed it.</p>
 
             <h2>The 40-Minute Problem</h2>
 
