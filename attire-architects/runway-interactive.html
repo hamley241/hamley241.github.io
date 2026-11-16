@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f4f0e9">
+  <meta name="description" content="Explore six Attire Architects silhouettes on an interactive runway, then open each look in a focused detail view.">
+  <title>Runway Atelier — Attire Architects</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Italiana&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --unit:min(calc(100vw / 1600),calc(100svh / 900));
+      --paper:#fbfaf7;
+      --stage:#f2eee7;
+      --ink:#241a15;
+      --muted:#736861;
+      --copper:#9d5435;
+      --copper-dark:#713822;
+      --line:rgba(36,26,21,.14);
+      --rail:#eee8df;
+      color-scheme:light;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;background:var(--paper)}
+    body{overflow:hidden;color:var(--ink);font-family:"DM Sans",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    button{border:0;background:none;color:inherit;font:inherit;cursor:pointer}
+    button:focus-visible,a:focus-visible,.runway:focus-visible{outline:2px solid var(--copper);outline-offset:4px}
+    .serif{font-family:Italiana,Georgia,serif}
+    .caps{text-transform:uppercase;letter-spacing:.15em}
+    .shell{height:100svh;min-height:540px;display:grid;grid-template-rows:auto 1fr}
+    .site-head{
+      position:relative;z-index:10;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+      gap:calc(30 * var(--unit));min-height:calc(78 * var(--unit));padding:calc(14 * var(--unit)) calc(38 * var(--unit));
+      background:rgba(251,250,247,.96);border-bottom:1px solid var(--line)
+    }
+    .brand{display:flex;align-items:center;gap:calc(11 * var(--unit));width:max-content}
+    .emblem{position:relative;width:calc(38 * var(--unit));height:calc(45 * var(--unit));overflow:hidden}
+    .emblem img{position:absolute;left:0;top:0;width:auto;max-width:none;height:100%}
+    .wordmark{display:grid;color:var(--copper-dark);line-height:1;text-transform:uppercase}
+    .wordmark strong{font:400 calc(16 * var(--unit))/1 Italiana,Georgia,serif;letter-spacing:.2em}
+    .wordmark span{margin-top:calc(4 * var(--unit));font-size:calc(8 * var(--unit));font-weight:600;letter-spacing:.24em}
+    .primary-nav{display:flex;align-items:center;gap:calc(38 * var(--unit));font-size:calc(10 * var(--unit));font-weight:600}
+    .primary-nav a{position:relative;padding:calc(8 * var(--unit)) 0;color:#9b918a}
+    .primary-nav a:hover,.primary-nav a[aria-current="page"]{color:var(--ink)}
+    .primary-nav a[aria-current="page"]:after{content:"";position:absolute;left:0;right:.15em;bottom:0;height:1px;background:var(--copper)}
+    .head-actions{justify-self:end;display:flex;align-items:center;gap:calc(18 * var(--unit));font-size:calc(9 * var(--unit));font-weight:600}
+    .head-actions svg{width:calc(18 * var(--unit));height:calc(18 * var(--unit));fill:none;stroke:currentColor;stroke-width:1.5}
+    main{position:relative;display:grid;grid-template-columns:minmax(0,1fr) calc(350 * var(--unit));min-height:0}
+    .runway{
+      position:relative;min-width:0;overflow:hidden;touch-action:none;cursor:none;user-select:none;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.38),transparent 31%),
+        linear-gradient(0deg,rgba(255,255,255,.68),transparent 30%),
+        radial-gradient(circle at 72% 30%,rgba(255,255,255,.94),transparent 28%),
+        linear-gradient(105deg,#ece6dd 0%,#f4f1eb 46%,#e8e1d7 100%)
+    }
+    .runway:before{
+      content:"";position:absolute;left:0;right:0;bottom:16%;height:1px;opacity:.65;
+      background:linear-gradient(90deg,transparent 0 9%,rgba(157,84,53,.22) 42%,transparent 85%)
+    }
+    .runway:after{
+      content:"";position:absolute;left:10%;right:3%;bottom:-31%;height:58%;border-radius:50%;
+      border:1px solid rgba(157,84,53,.14);transform:perspective(500px) rotateX(68deg);pointer-events:none
+    }
+    .models{position:absolute;inset:0}
+    .model{
+      position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform,filter,opacity;cursor:none;outline:0
+    }
+    .model img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none}
+    .model:after{
+      content:"";position:absolute;left:17%;right:17%;bottom:2.5%;height:3.4%;border-radius:50%;
+      background:radial-gradient(closest-side,rgba(49,33,24,.25),transparent 72%);z-index:-1
+    }
+    .intro{position:absolute;z-index:3;left:calc(40 * var(--unit));top:calc(38 * var(--unit));width:calc(390 * var(--unit));pointer-events:none}
+    .eyebrow{font-size:calc(9 * var(--unit));font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--copper)}
+    .intro h1{margin-top:calc(12 * var(--unit));font-weight:400;font-size:calc(36 * var(--unit));line-height:1.03;letter-spacing:.01em}
+    .intro p{max-width:calc(360 * var(--unit));margin-top:calc(14 * var(--unit));color:var(--muted);font-size:calc(13 * var(--unit));line-height:1.6}
+    .look-meta{position:absolute;z-index:3;left:calc(40 * var(--unit));bottom:calc(34 * var(--unit));pointer-events:none}
+    .look-line{display:flex;align-items:baseline;gap:calc(13 * var(--unit));height:calc(43 * var(--unit));overflow:hidden}
+    .look-line>span:first-child{font-size:calc(10 * var(--unit));font-weight:600;letter-spacing:.2em;text-transform:uppercase}
+    .number-window{height:calc(43 * var(--unit));overflow:hidden}
+    .number-roll{display:block;will-change:transform}
+    .number-roll b{display:block;height:calc(43 * var(--unit));font:400 calc(36 * var(--unit))/calc(43 * var(--unit)) Italiana,Georgia,serif}
+    .look-name{margin-top:calc(5 * var(--unit));font-size:calc(9 * var(--unit));font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--copper-dark)}
+    .drag-note{position:absolute;z-index:3;right:calc(28 * var(--unit));bottom:calc(30 * var(--unit));display:flex;align-items:center;gap:calc(10 * var(--unit));font-size:calc(8 * var(--unit));font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);pointer-events:none}
+    .drag-note:before{content:"";width:calc(44 * var(--unit));height:1px;background:currentColor}
+    .cursor{
+      position:absolute;z-index:8;left:0;top:0;width:calc(48 * var(--unit));height:calc(48 * var(--unit));
+      margin:calc(-24 * var(--unit)) 0 0 calc(-24 * var(--unit));border:1.5px solid var(--copper-dark);border-radius:50%;
+      pointer-events:none;opacity:0;transition:opacity .2s,width .25s,height .25s,margin .25s,border-radius .25s
+    }
+    .cursor.show{opacity:1}
+    .cursor.drag{width:calc(88 * var(--unit));height:calc(34 * var(--unit));margin:calc(-17 * var(--unit)) 0 0 calc(-44 * var(--unit));border-radius:99px}
+    .rail{position:relative;min-height:0;overflow:hidden;background:var(--rail);border-left:1px solid var(--line)}
+    .card{
+      position:absolute;left:0;top:0;width:100%;display:grid;grid-template-columns:42% 1fr;align-items:center;gap:calc(12 * var(--unit));
+      padding:calc(18 * var(--unit)) calc(20 * var(--unit));background:#f5f1ea;border-bottom:1px solid var(--line);will-change:transform;cursor:pointer
+    }
+    .card:nth-child(even){background:#fffdfa}
+    .product-shot{display:grid;place-items:center;height:100%;min-height:0}
+    .product-shot img{display:block;width:100%;height:100%;object-fit:contain}
+    .card-copy{align-self:end;padding-bottom:calc(4 * var(--unit))}
+    .card-code{font-size:calc(8 * var(--unit));font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--copper)}
+    .card h2{margin-top:calc(7 * var(--unit));font:400 calc(18 * var(--unit))/1.12 Italiana,Georgia,serif}
+    .mood{margin-top:calc(8 * var(--unit));color:var(--muted);font-size:calc(9 * var(--unit));line-height:1.35}
+    .save{
+      position:absolute;top:calc(14 * var(--unit));right:calc(16 * var(--unit));width:calc(26 * var(--unit));height:calc(26 * var(--unit));
+      border:1px solid var(--line);border-radius:50%;display:grid;place-items:center
+    }
+    .save svg{width:55%;fill:none;stroke:currentColor;stroke-width:1.5}
+    .save[aria-pressed="true"]{color:#fff;background:var(--copper);border-color:var(--copper)}
+    .save[aria-pressed="true"] svg{fill:currentColor}
+    .wait{position:fixed;inset:0;z-index:30;display:grid;place-items:center;background:#f4f0e9;transition:opacity .55s;pointer-events:none}
+    .wait span{font:400 calc(18 * var(--unit))/1 Italiana,Georgia,serif;letter-spacing:.16em;text-transform:uppercase;color:var(--copper-dark)}
+    .wait.gone{opacity:0}
+    .detail-overlay{
+      position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:clamp(14px,3vw,42px);
+      background:rgba(31,22,18,.78);opacity:0;visibility:hidden;
+      transition:opacity .35s,visibility 0s linear .35s
+    }
+    .detail-overlay.open{opacity:1;visibility:visible;transition:opacity .35s}
+    .detail-panel{
+      position:relative;width:min(1280px,100%);height:min(820px,calc(100svh - 48px));min-height:590px;
+      display:grid;grid-template-columns:minmax(0,1.2fr) minmax(310px,.8fr);overflow:hidden;
+      background:#eee8df;box-shadow:0 40px 90px rgba(19,11,8,.32)
+    }
+    .detail-close{
+      position:absolute;z-index:9;right:18px;top:18px;width:48px;height:48px;border:1px solid rgba(36,26,21,.2);
+      border-radius:50%;display:grid;place-items:center;background:rgba(255,253,248,.88);font-size:0
+    }
+    .detail-close:before,.detail-close:after{content:"";position:absolute;width:20px;height:1px;background:var(--ink);transform:rotate(45deg)}
+    .detail-close:after{transform:rotate(-45deg)}
+    .detail-visual{position:relative;min-width:0;overflow:hidden;background:
+      radial-gradient(circle at 50% 48%,rgba(255,255,255,.92),transparent 37%),
+      linear-gradient(120deg,#e5ddd2,#f7f3ed 52%,#e6ddd1)}
+    .detail-visual:after{
+      content:"";position:absolute;left:20%;right:20%;bottom:5.5%;height:5%;border-radius:50%;
+      background:radial-gradient(closest-side,rgba(48,32,24,.25),transparent);pointer-events:none
+    }
+    .detail-code{
+      position:absolute;z-index:1;left:28px;top:24px;font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--copper)
+    }
+    .detail-stage{position:absolute;inset:0;display:grid;place-items:center;touch-action:none;cursor:default;outline:0}
+    .detail-stage.spin{cursor:grab}.detail-stage.spin.dragging{cursor:grabbing}
+    .detail-model{position:absolute;inset:4% 8% 3%;width:84%;height:93%;object-fit:contain;filter:drop-shadow(0 22px 28px rgba(54,35,26,.1));pointer-events:none}
+    .detail-stage.spin .detail-model{inset:7% 12% 5%;width:76%;height:88%}
+    .detail-cue{
+      position:absolute;z-index:3;left:50%;bottom:21px;transform:translateX(-50%);display:none;align-items:center;gap:10px;
+      font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);white-space:nowrap
+    }
+    .detail-cue:before,.detail-cue:after{content:"";width:34px;height:1px;background:currentColor}
+    .detail-stage.spin .detail-cue{display:flex}
+    .detail-dotbar{position:relative;width:100px;height:1px;background:rgba(36,26,21,.22)}
+    .detail-dotbar i{position:absolute;left:0;top:50%;width:7px;height:7px;margin:-3.5px;border-radius:50%;background:var(--ink)}
+    .detail-hotspot{
+      position:absolute;z-index:4;width:25px;height:25px;margin:-12.5px 0 0 -12.5px;border-radius:50%;
+      display:none;place-items:center;background:#fff;box-shadow:0 6px 18px rgba(30,20,15,.2);font-size:17px
+    }
+    .detail-stage.spin.front .detail-hotspot{display:grid}
+    .detail-hotspot:before{content:"";position:absolute;inset:-7px;border:1px solid rgba(255,255,255,.92);border-radius:50%;animation:detailPing 2.2s infinite}
+    @keyframes detailPing{0%{transform:scale(.6);opacity:.8}85%,100%{transform:scale(1.55);opacity:0}}
+    .detail-tip{
+      position:absolute;left:calc(100% + 12px);top:50%;width:190px;padding:11px 13px;background:#fff;color:var(--muted);
+      font-family:Georgia,serif;font-size:13px;line-height:1.4;text-align:left;opacity:0;transform:translateY(-50%) translateX(-5px);
+      transition:opacity .2s,transform .2s;pointer-events:none
+    }
+    .detail-tip strong{display:block;margin-bottom:4px;color:var(--ink);font-family:"DM Sans",sans-serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase}
+    .detail-hotspot:hover .detail-tip,.detail-hotspot:focus .detail-tip{opacity:1;transform:translateY(-50%)}
+    .detail-h1{left:50%;top:31%}.detail-h2{left:50%;top:40%}.detail-h3{left:54%;top:80%}
+    .detail-copy{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center;padding:70px clamp(28px,4vw,60px) 48px;background:#fffdfa;border-left:1px solid var(--line)}
+    .detail-eyebrow{font-size:9px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--copper)}
+    .detail-copy h2{margin-top:14px;font:400 clamp(34px,4vw,56px)/.98 Italiana,Georgia,serif}
+    .detail-special{margin-top:20px;color:var(--muted);font-size:14px;line-height:1.65}
+    .detail-story{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:28px;padding-top:22px;border-top:1px solid var(--line)}
+    .detail-story dt{font-size:8px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--copper)}
+    .detail-story dd{margin-top:8px;font:400 15px/1.45 Georgia,serif;color:var(--ink)}
+    .detail-note{margin-top:22px;padding:13px 14px;background:#f0ebe4;color:var(--muted);font-size:9px;line-height:1.55}
+    .detail-actions{display:flex;gap:8px;margin-top:22px}
+    .detail-action{height:40px;padding:0 17px;background:var(--ink);color:#fff;font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+    .detail-action.secondary{color:var(--ink);background:transparent;border:1px solid var(--line)}
+    body.modal-open{overflow:hidden}
+    body.modal-open .shell{visibility:hidden}
+    @media(max-width:820px){
+      :root{--unit:1px}
+      .shell{min-height:560px}
+      .site-head{grid-template-columns:1fr auto;min-height:64px;padding:9px 15px}
+      .emblem{width:32px;height:38px}.wordmark strong{font-size:14px}.wordmark span{font-size:7px}
+      .primary-nav{display:none}.head-actions a:first-child{display:none}.head-actions{font-size:9px}
+      main{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) 176px}
+      .runway{cursor:grab}.model{cursor:grab}
+      .intro{left:16px;top:20px;width:245px}.intro h1{font-size:25px}.intro p{display:none}
+      .look-meta{left:16px;bottom:18px}.look-line{height:34px}.number-window{height:34px}
+      .number-roll b{height:34px;font-size:28px;line-height:34px}.look-name{font-size:8px}
+      .drag-note{right:14px;bottom:18px;font-size:7px}.drag-note:before{width:22px}.cursor{display:none}
+      .rail{border-left:0;border-top:1px solid var(--line)}
+      .card{width:190px;height:100%;grid-template-columns:45% 1fr;padding:12px;gap:8px;border-right:1px solid var(--line);border-bottom:0}
+      .card h2{font-size:15px}.card-code,.mood{font-size:7px}.save{top:8px;right:8px;width:24px;height:24px}
+      .detail-overlay{padding:0}
+      .detail-panel{width:100%;height:100svh;min-height:0;display:grid;grid-template-columns:1fr;grid-template-rows:minmax(390px,56svh) auto;overflow:auto;clip-path:none}
+      .detail-visual{min-height:390px}.detail-copy{padding:35px 22px 42px;border-left:0;border-top:1px solid var(--line)}
+      .detail-copy h2{font-size:39px}.detail-close{position:fixed;right:14px;top:14px;width:44px;height:44px}
+      .detail-model{inset:4% 5% 2%;width:90%;height:94%}.detail-stage.spin .detail-model{inset:6% 10% 4%;width:80%;height:90%}
+      .detail-tip{width:150px}.detail-story{grid-template-columns:1fr}.detail-cue{bottom:13px}.detail-code{left:18px;top:18px}
+    }
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}.wait,.cursor,.detail-overlay,.detail-panel{transition:none}.detail-hotspot:before{animation:none}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="site-head">
+      <a class="brand" href="./" aria-label="Attire Architects home">
+        <span class="emblem" aria-hidden="true"><img src="assets/attire-architects-header-copper.png" alt=""></span>
+        <span class="wordmark" aria-hidden="true"><strong>Attire</strong><span>Architects</span></span>
+      </a>
+      <nav class="primary-nav caps" aria-label="Primary navigation">
+        <a href="./">Studio</a>
+        <a href="./#collection">Collection</a>
+        <a href="runway-depth.html">Runway</a>
+        <a href="runway-interactive.html" aria-current="page">Atelier</a>
+        <a href="aa-10-360.html">AA-10 / 360</a>
+      </nav>
+      <div class="head-actions caps">
+        <a href="./#enquire">Enquire</a>
+        <a href="./#collection" aria-label="View collection">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 7.5h15l-1 13h-13Z"/><path d="M9 9V6.8a3 3 0 0 1 6 0V9"/></svg>
+        </a>
+      </div>
+    </header>
+    <main>
+      <section class="runway" id="runway" tabindex="0" aria-label="Attire Architects runway. Drag, scroll, or use arrow keys to change looks.">
+        <div class="models" id="models"></div>
+        <div class="intro">
+          <p class="eyebrow">Runway atelier · AA-05—AA-10</p>
+          <h1 class="serif">Move through.<br>Step inside.</h1>
+          <p>Drag through six silhouettes, then select any look to open its focused atelier view.</p>
+        </div>
+        <div class="look-meta">
+          <div class="look-line"><span>Look</span><span class="number-window"><span class="number-roll" id="numberRoll"></span></span></div>
+          <p class="look-name" id="lookName" aria-live="polite"></p>
+        </div>
+        <div class="drag-note">Drag · Select a look</div>
+        <div class="cursor" id="cursor"></div>
+      </section>
+      <aside class="rail" id="rail" aria-label="Collection garments"></aside>
+    </main>
+  </div>
+  <section class="detail-overlay" id="detailOverlay" aria-hidden="true" aria-label="Selected look detail">
+    <div class="detail-panel" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+      <button class="detail-close" id="detailClose" type="button" aria-label="Close look detail"></button>
+      <div class="detail-visual">
+        <p class="detail-code" id="detailCode"></p>
+        <div class="detail-stage" id="detailStage" tabindex="0" aria-label="Selected garment view">
+          <img class="detail-model" id="detailModel" src="" alt="" draggable="false">
+          <button class="detail-hotspot detail-h1" type="button" aria-label="Blouse detail">+<span class="detail-tip"><strong>Lime blouse</strong>The bright sleeveless bodice creates the look's strongest colour contrast.</span></button>
+          <button class="detail-hotspot detail-h2" type="button" aria-label="Waist detail">+<span class="detail-tip"><strong>Sheer waist</strong>A translucent brown connection carries the eye from blouse to skirt.</span></button>
+          <button class="detail-hotspot detail-h3" type="button" aria-label="Border detail">+<span class="detail-tip"><strong>Double border</strong>Two lime-and-pale-gold tiers give the hem its architectural rhythm.</span></button>
+          <div class="detail-cue" aria-hidden="true"><span>Drag to rotate</span><span class="detail-dotbar"><i id="detailDot"></i></span><span id="detailDegrees">000°</span></div>
+        </div>
+      </div>
+      <div class="detail-copy">
+        <p class="detail-eyebrow" id="detailMood"></p>
+        <h2 id="detailTitle"></h2>
+        <p class="detail-special" id="detailSpecial"></p>
+        <dl class="detail-story">
+          <div><dt>Mood</dt><dd id="detailMoodValue"></dd></div>
+          <div><dt>Consider for</dt><dd id="detailOccasions"></dd></div>
+        </dl>
+        <p class="detail-note" id="detailNote"></p>
+        <div class="detail-actions">
+          <button class="detail-action" id="detailSave" type="button" aria-pressed="false">Save look</button>
+          <a class="detail-action secondary" href="./#enquire">Enquire</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="wait" id="wait"><span>Attire Architects</span></div>
+  <script>
+    (function(){
+      "use strict";
+      var looks=[
+        {code:"AA-05",name:"Red Anarkali",mood:"Romantic · Celebratory",title:"A vivid, flowing statement",special:"A full red Anarkali line is balanced by a light floral dupatta.",occasions:"Wedding functions · Festive gatherings · Evening celebrations",model:"assets/aa-05-model.png",cutout:"assets/v4-aa-05-cutout.png",accent:"#c92d32",alt:"Model wearing the red Anarkali and floral dupatta"},
+        {code:"AA-06",name:"Royal blue gown",mood:"Regal · Luminous",title:"A regal evening silhouette",special:"Royal blue is lifted by repeating silver motifs and a sweeping full-length skirt.",occasions:"Receptions · Sangeet evenings · Formal celebrations",model:"assets/aa-06-model.png",cutout:"assets/v4-aa-06-cutout.png",accent:"#2f45c6",alt:"Model wearing the royal-blue gown with silver diamond motifs"},
+        {code:"AA-07",name:"Floral gown",mood:"Expressive · Graceful",title:"Florals with full-length movement",special:"An all-over floral composition gives the long silhouette colour, softness, and visual rhythm.",occasions:"Day weddings · Garden celebrations · Festive brunches",model:"assets/aa-07-model.png",cutout:"assets/v4-aa-07-cutout.png",accent:"#b95e72",alt:"Model wearing the multicolour floral gown"},
+        {code:"AA-08",name:"Yellow gown",mood:"Fresh · Joyful",title:"Sunlit colour, graphic contrast",special:"A patterned light bodice gives structure to the bright yellow skirt and its easy movement.",occasions:"Haldi celebrations · Daytime festivities · Summer gatherings",model:"assets/aa-08-model.png",cutout:"assets/v4-aa-08-cutout.png",accent:"#e1b414",alt:"Model wearing the yellow gown with white patterned bodice"},
+        {code:"AA-09",name:"Black and gold gown",mood:"Polished · Dramatic",title:"Classic black, detailed in gold",special:"A gold-detailed bodice brings light and definition to the clean black gown.",occasions:"Cocktail evenings · Receptions · Formal dinners",model:"assets/aa-09-model.png",cutout:"assets/v4-aa-09-cutout.png",accent:"#8f7848",alt:"Model wearing the black gown with gold lace bodice"},
+        {code:"AA-10",name:"Brown and green lehenga",mood:"Playful · Sculptural",title:"Layered borders made for movement",special:"The lime blouse, sheer waist, and two border tiers give the brown skirt a clear architectural rhythm.",occasions:"Mehendi and sangeet events · Festive weddings · Dance-led celebrations",model:"assets/aa-10-model.png",cutout:"assets/v4-aa-10-cutout.png",accent:"#8baa29",alt:"Model wearing the brown net lehenga and green blouse"}
+      ];
+      var N=looks.length;
+      var KX=[1.18,.745,.495,.345,.235,.15,.085];
+      var KF=[1.14,.9,.785,.711,.658,.62,.594];
+      var KH=[1.18,.86,.61,.46,.35,.27,.2];
+      var KB=[0,0,1.4,3.8,7.5,12,17];
+      var KO=[1,1,1,1,.88,.52,0];
+      var runway=document.getElementById("runway");
+      var modelHost=document.getElementById("models");
+      var rail=document.getElementById("rail");
+      var roll=document.getElementById("numberRoll");
+      var lookName=document.getElementById("lookName");
+      var cursor=document.getElementById("cursor");
+      var wait=document.getElementById("wait");
+      var overlay=document.getElementById("detailOverlay");
+      var detailClose=document.getElementById("detailClose");
+      var detailStage=document.getElementById("detailStage");
+      var detailModel=document.getElementById("detailModel");
+      var detailCode=document.getElementById("detailCode");
+      var detailTitle=document.getElementById("detailTitle");
+      var detailMood=document.getElementById("detailMood");
+      var detailMoodValue=document.getElementById("detailMoodValue");
+      var detailSpecial=document.getElementById("detailSpecial");
+      var detailOccasions=document.getElementById("detailOccasions");
+      var detailNote=document.getElementById("detailNote");
+      var detailSave=document.getElementById("detailSave");
+      var detailDot=document.getElementById("detailDot");
+      var detailDegrees=document.getElementById("detailDegrees");
+      var calm=window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+      var wrap=function(x,n){return ((x%n)+n)%n};
+      var clamp=function(x,a,b){return Math.min(b,Math.max(a,x))};
+      var saved=looks.map(function(){return false});
+      var modalOpen=false;
+      var detailLook=0;
+      var opener=null;
+      var detailFrames=Array.from({length:12},function(_,index){return "assets/v5-aa-10-spin-transparent/frame-"+String(index).padStart(2,"0")+".png"});
+      var detailAngle=0;
+      var detailFrame=-1;
+      var detailDragging=false;
+      var detailStartX=0;
+      var detailStartAngle=0;
+      var models=looks.map(function(look,index){
+        var el=document.createElement("div");
+        var img=document.createElement("img");
+        el.className="model";
+        el.dataset.index=index;
+        el.tabIndex=0;
+        el.setAttribute("role","button");
+        el.setAttribute("aria-label","Open "+look.code+" "+look.name);
+        img.src=look.model;
+        img.alt=look.alt;
+        img.draggable=false;
+        el.appendChild(img);
+        modelHost.appendChild(el);
+        return {el:el,filter:"",opacity:""};
+      });
+      var cards=looks.map(function(look,index){
+        var article=document.createElement("article");
+        article.className="card";
+        article.dataset.index=index;
+        article.tabIndex=0;
+        article.setAttribute("role","button");
+        article.setAttribute("aria-label","Open "+look.code+" "+look.name);
+        article.style.setProperty("--accent",look.accent);
+        article.innerHTML='<button class="save" type="button" aria-pressed="false" aria-label="Save '+look.name+'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20S3.5 15 3.5 9A4.6 4.6 0 0 1 12 6.6 4.6 4.6 0 0 1 20.5 9C20.5 15 12 20 12 20Z"/></svg></button><span class="product-shot"><img src="'+look.cutout+'" alt="" aria-hidden="true" draggable="false"></span><span class="card-copy"><span class="card-code">'+look.code+'</span><h2>'+look.name+'</h2><span class="mood">'+look.mood+'</span></span>';
+        rail.appendChild(article);
+        return article;
+      });
+      looks.concat(looks.slice(0,1)).forEach(function(look){
+        var b=document.createElement("b");
+        b.textContent=look.code.replace("AA-","");
+        roll.appendChild(b);
+      });
+      rail.addEventListener("click",function(event){
+        var button=event.target.closest(".save");
+        if(button){
+          event.stopPropagation();
+          var card=button.closest(".card");
+          toggleSaved(Number(card.dataset.index));
+          return;
+        }
+        var card=event.target.closest(".card");
+        if(card){openDetail(Number(card.dataset.index),card)}
+      });
+      rail.addEventListener("keydown",function(event){
+        var card=event.target.closest(".card");
+        if(card&&(event.key==="Enter"||event.key===" ")){event.preventDefault();openDetail(Number(card.dataset.index),card)}
+      });
+      models.forEach(function(item,index){
+        item.el.addEventListener("keydown",function(event){
+          if(event.key==="Enter"||event.key===" "){event.preventDefault();target=Math.round(target)+(index-wrap(Math.round(target),N));p=target;dirty=true;openDetail(index,item.el)}
+        });
+      });
+      var W=0,H=0,base=0,cardSize=0,side=false,p=0,target=0,last=0,dirty=true;
+      function size(){
+        W=runway.clientWidth;
+        H=runway.clientHeight;
+        base=H*1.18;
+        side=window.innerWidth<=820;
+        models.forEach(function(item){item.el.style.width=base*.8+"px";item.el.style.height=base+"px"});
+        cardSize=side?190:rail.clientHeight/3;
+        cards.forEach(function(card){card.style.height=side?"100%":cardSize+"px"});
+        dirty=true;
+      }
+      function mix(table,d){
+        var k=clamp(d+1,0,6);
+        var a=Math.floor(k);
+        var b=Math.min(6,a+1);
+        var t=k-a;
+        return table[a]+(table[b]-table[a])*t;
+      }
+      var shownIndex=-1;
+      function paint(){
+        models.forEach(function(item,index){
+          var d=wrap(index-p,N);
+          if(d>N-1){d-=N}
+          var height=mix(KH,d)*H;
+          var scale=height/base;
+          var width=height*.8;
+          var x=mix(KX,d)*W-width/2;
+          var y=mix(KF,d)*H-height;
+          var blur=mix(KB,d)/Math.max(scale,.001);
+          var filter=blur<.2?"none":"blur("+blur.toFixed(1)+"px)";
+          var opacity=mix(KO,d).toFixed(3);
+          item.el.style.transform="translate3d("+x.toFixed(1)+"px,"+y.toFixed(1)+"px,0) scale("+scale.toFixed(4)+")";
+          item.el.style.zIndex=100-Math.round(d*10);
+          if(filter!==item.filter){item.filter=filter;item.el.style.filter=filter}
+          if(opacity!==item.opacity){item.opacity=opacity;item.el.style.opacity=opacity}
+        });
+        var track=cardSize*N;
+        cards.forEach(function(card,index){
+          var pos=wrap(index*cardSize-p*cardSize,track);
+          if(pos>track-cardSize){pos-=track}
+          card.style.transform=side?"translate3d("+pos.toFixed(1)+"px,0,0)":"translate3d(0,"+pos.toFixed(1)+"px,0)";
+        });
+        var lineHeight=roll.firstElementChild.offsetHeight;
+        roll.style.transform="translate3d(0,"+(-wrap(p,N)*lineHeight).toFixed(1)+"px,0)";
+        var index=wrap(Math.round(p),N);
+        if(index!==shownIndex){
+          shownIndex=index;
+          lookName.textContent=looks[index].code+" · "+looks[index].name+" · "+looks[index].mood;
+          runway.style.setProperty("--active",looks[index].accent);
+        }
+      }
+      function frame(now){
+        var dt=Math.min(50,now-last)||16;
+        last=now;
+        var previous=p;
+        if(modalOpen){p=p}else if(calm){p=target}else{p+=(target-p)*(1-Math.exp(-dt*.0072))}
+        if(Math.abs(target-p)<.0004){p=target}
+        if(p!==previous||dirty){dirty=false;paint()}
+        cx+=(mx-cx)*.32;
+        cy+=(my-cy)*.32;
+        cursor.style.transform="translate3d("+cx.toFixed(1)+"px,"+cy.toFixed(1)+"px,0)";
+        requestAnimationFrame(frame);
+      }
+      var mx=0,my=0,cx=0,cy=0,down=false,startX=0,startTarget=0,moved=0,wheelTimer=0;
+      var pull=function(){return Math.max(150,W*.2)};
+      runway.addEventListener("pointerenter",function(event){if(event.pointerType==="mouse"){cursor.classList.add("show")}});
+      runway.addEventListener("pointerleave",function(){cursor.classList.remove("show")});
+      runway.addEventListener("pointermove",function(event){
+        var box=runway.getBoundingClientRect();
+        mx=event.clientX-box.left;
+        my=event.clientY-box.top;
+        if(!down){return}
+        var dx=event.clientX-startX;
+        moved=Math.max(moved,Math.abs(dx));
+        target=startTarget+dx/pull();
+      });
+      runway.addEventListener("pointerdown",function(event){
+        down=true;
+        startX=event.clientX;
+        startTarget=target;
+        moved=0;
+        runway.setPointerCapture(event.pointerId);
+        cursor.classList.add("drag");
+      });
+      function release(event){
+        if(!down){return}
+        down=false;
+        cursor.classList.remove("drag");
+        if(moved<6){
+          var hit=document.elementsFromPoint(event.clientX,event.clientY).find(function(node){return node.classList&&node.classList.contains("model")});
+          if(hit){
+            var selected=Number(hit.dataset.index);
+            var delta=wrap(selected-target,N);
+            if(delta>N/2){delta-=N}
+            target=Math.round(target)+Math.round(delta);
+            p=target;
+            dirty=true;
+            openDetail(selected,hit);
+          }
+        }else{target=Math.round(target)}
+      }
+      runway.addEventListener("pointerup",release);
+      runway.addEventListener("pointercancel",release);
+      runway.addEventListener("wheel",function(event){
+        event.preventDefault();
+        target+=clamp(event.deltaY+event.deltaX,-120,120)/420;
+        clearTimeout(wheelTimer);
+        wheelTimer=setTimeout(function(){target=Math.round(target)},150);
+      },{passive:false});
+      runway.addEventListener("keydown",function(event){
+        if(event.key==="ArrowRight"||event.key==="ArrowDown"){event.preventDefault();target=Math.round(target)+1}
+        if(event.key==="ArrowLeft"||event.key==="ArrowUp"){event.preventDefault();target=Math.round(target)-1}
+        if(event.key==="Home"){event.preventDefault();target=0}
+        if(event.key==="Enter"){event.preventDefault();openDetail(wrap(Math.round(target),N),runway)}
+      });
+      function toggleSaved(index){
+        saved[index]=!saved[index];
+        cards[index].querySelector(".save").setAttribute("aria-pressed",saved[index]?"true":"false");
+        if(index===detailLook){
+          detailSave.setAttribute("aria-pressed",saved[index]?"true":"false");
+          detailSave.textContent=saved[index]?"Saved":"Save look";
+        }
+      }
+      function showDetailFrame(){
+        if(detailLook!==5){return}
+        var normalized=wrap(detailAngle,1);
+        var index=Math.round(normalized*detailFrames.length)%detailFrames.length;
+        if(index!==detailFrame){
+          detailFrame=index;
+          detailModel.src=detailFrames[index];
+          detailModel.alt=looks[5].alt+", "+(index===0||index===11?"front view":index===6?"back-view concept":"turning concept view");
+        }
+        var degree=Math.round(normalized*360)%360;
+        detailDegrees.textContent=String(degree).padStart(3,"0")+"°";
+        detailDot.style.transform="translateX("+(normalized*100).toFixed(1)+"px)";
+        detailStage.classList.toggle("front",(index===0||index===11)&&!detailDragging);
+        detailStage.setAttribute("aria-valuenow",String(degree));
+      }
+      function openDetail(index,source){
+        var look=looks[index];
+        detailLook=index;
+        opener=source||document.activeElement;
+        modalOpen=true;
+        target=p=Math.round(target)+(index-wrap(Math.round(target),N));
+        dirty=true;
+        detailCode.textContent=look.code+" · Atelier view";
+        detailTitle.textContent=look.name;
+        detailMood.textContent=look.title;
+        detailMoodValue.textContent=look.mood;
+        detailSpecial.textContent=look.special;
+        detailOccasions.textContent=look.occasions;
+        detailSave.setAttribute("aria-pressed",saved[index]?"true":"false");
+        detailSave.textContent=saved[index]?"Saved":"Save look";
+        detailStage.classList.remove("spin","front","dragging");
+        detailStage.removeAttribute("role");
+        detailStage.removeAttribute("aria-valuemin");
+        detailStage.removeAttribute("aria-valuemax");
+        detailStage.removeAttribute("aria-valuenow");
+        if(index===5){
+          detailAngle=0;
+          detailFrame=-1;
+          detailStage.classList.add("spin","front");
+          detailStage.setAttribute("role","slider");
+          detailStage.setAttribute("aria-valuemin","0");
+          detailStage.setAttribute("aria-valuemax","360");
+          detailStage.setAttribute("aria-label","Interactive 360 degree concept view of AA-10. Drag or use arrow keys.");
+          detailNote.textContent="Interactive 360° concept view. The back and turning views remain a visual study until a real garment-back reference is confirmed.";
+          showDetailFrame();
+        }else{
+          detailModel.src=look.model;
+          detailModel.alt=look.alt;
+          detailStage.setAttribute("aria-label","Front view of "+look.code+" "+look.name);
+          detailNote.textContent="Front view shown. A matching turntable view will be added when approved angle references are available.";
+        }
+        overlay.classList.add("open");
+        overlay.setAttribute("aria-hidden","false");
+        document.body.classList.add("modal-open");
+        document.querySelector(".shell").inert=true;
+        history.replaceState(null,"","#look-"+look.code.toLowerCase());
+        requestAnimationFrame(function(){detailClose.focus()});
+      }
+      function closeDetail(){
+        if(!modalOpen){return}
+        modalOpen=false;
+        detailDragging=false;
+        overlay.classList.remove("open");
+        overlay.setAttribute("aria-hidden","true");
+        document.body.classList.remove("modal-open");
+        document.querySelector(".shell").inert=false;
+        history.replaceState(null,"",location.pathname+location.search);
+        if(opener&&opener.focus){opener.focus()}
+      }
+      detailClose.addEventListener("click",closeDetail);
+      overlay.addEventListener("click",function(event){if(event.target===overlay){closeDetail()}});
+      detailSave.addEventListener("click",function(){toggleSaved(detailLook)});
+      detailStage.addEventListener("pointerdown",function(event){
+        if(detailLook!==5){return}
+        detailDragging=true;
+        detailStartX=event.clientX;
+        detailStartAngle=detailAngle;
+        detailStage.classList.add("dragging");
+        detailStage.classList.remove("front");
+        detailStage.setPointerCapture(event.pointerId);
+      });
+      detailStage.addEventListener("pointermove",function(event){
+        if(!detailDragging){return}
+        detailAngle=detailStartAngle-(event.clientX-detailStartX)/560;
+        showDetailFrame();
+      });
+      function releaseDetail(){
+        detailDragging=false;
+        detailStage.classList.remove("dragging");
+        showDetailFrame();
+      }
+      detailStage.addEventListener("pointerup",releaseDetail);
+      detailStage.addEventListener("pointercancel",releaseDetail);
+      detailStage.addEventListener("keydown",function(event){
+        if(detailLook!==5){return}
+        if(event.key==="ArrowRight"){event.preventDefault();detailAngle+=1/detailFrames.length;showDetailFrame()}
+        if(event.key==="ArrowLeft"){event.preventDefault();detailAngle-=1/detailFrames.length;showDetailFrame()}
+        if(event.key==="Home"){event.preventDefault();detailAngle=0;showDetailFrame()}
+        if(event.key==="End"){event.preventDefault();detailAngle=.5;showDetailFrame()}
+      });
+      document.addEventListener("keydown",function(event){
+        if(!modalOpen){return}
+        if(event.key==="Escape"){event.preventDefault();closeDetail();return}
+        if(event.key==="Tab"){
+          var focusable=Array.from(overlay.querySelectorAll("button,[href],[tabindex]:not([tabindex='-1'])")).filter(function(node){return !node.disabled&&node.offsetParent!==null});
+          if(!focusable.length){return}
+          var first=focusable[0];
+          var last=focusable[focusable.length-1];
+          if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}
+          else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}
+        }
+      });
+      window.addEventListener("resize",size);
+      var sources=looks.reduce(function(list,look){list.push(look.model,look.cutout);return list},[]).concat(detailFrames);
+      Promise.all(sources.map(function(src){
+        var image=new Image();
+        image.src=src;
+        return image.decode().catch(function(){return null});
+      })).then(function(){return document.fonts.ready}).then(function(){
+        size();
+        paint();
+        wait.classList.add("gone");
+        var requested=location.hash.match(/^#look-aa-(05|06|07|08|09|10)$/);
+        if(requested){openDetail(Number(requested[1])-5,runway)}
+      });
+      size();
+      requestAnimationFrame(frame);
+    })();
+  </script>
+</body>
+</html>
